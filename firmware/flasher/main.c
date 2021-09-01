@@ -62,7 +62,7 @@ void dbgPrintHexDigit(uint8_t b) {
     dbgPrintHexDigit((x)&0x0f); \
     DBGPRINTCHAR('\r'); \
     DBGPRINTCHAR('\n');
-#else 
+#else
 #define DBGPRINTCHAR(x)
 #define DBGPRINTHEX(x)
 #endif
@@ -111,13 +111,22 @@ int main(void) {
   halInit();
 
   // float usb inputs, hope the host notices detach...
-  palSetPadMode(GPIOA, 11, PAL_MODE_INPUT); palSetPadMode(GPIOA, 12, PAL_MODE_INPUT);
+  palSetPadMode(GPIOA, 11, PAL_MODE_INPUT);
+  palSetPadMode(GPIOA, 12, PAL_MODE_INPUT);
   // setup LEDs
   palSetPadMode(LED1_PORT,LED1_PIN,PAL_MODE_OUTPUT_PUSHPULL);
   palSetPad(LED1_PORT,LED1_PIN);
 #ifdef LED2_PIN
   palSetPadMode(LED2_PORT,LED2_PIN,PAL_MODE_OUTPUT_PUSHPULL);
 #endif
+
+#ifdef LED3_PIN //seb
+  palSetPadMode(LED3_PORT,LED3_PIN,PAL_MODE_OUTPUT_PUSHPULL); //seb
+#endif //seb
+#ifdef LED4_PIN //seb
+  palSetPadMode(LED4_PORT,LED4_PIN,PAL_MODE_OUTPUT_PUSHPULL); //seb
+#endif //seb
+
 
   chSysInit();
   watchdog_feed();
@@ -261,4 +270,3 @@ int main(void) {
   NVIC_SystemReset();
   return 0;
 }
-

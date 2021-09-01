@@ -30,9 +30,7 @@
 
 //#define STM_IS_I2S_MASTER true
 
-#if (BOARD_AXOLOTI_V05)
-#error "BOARD revision V05 uses SAI, please update the makefile to compile codec_ADAU1961_SAI.c"
-#elif (BOARD_STM32F4DISCOVERY)
+#if (BOARD_STM32F4DISCOVERY)
 #error "STM32F4DISCOVERY has a different codec, please update the makefile..."
 #endif
 
@@ -601,6 +599,7 @@ void codec_ADAU1961_i2s_init(uint16_t sampleRate) {
   CODEC_ADAU1961_I2S->I2SCFGR |= SPI_I2SCFGR_I2SE;
   CODEC_ADAU1961_I2Sext->I2SCFGR |= SPI_I2SCFGR_I2SE;
 }
+
 
 void codec_ADAU1961_Stop(void) {
   CODEC_ADAU1961_I2S->I2SCFGR = 0;

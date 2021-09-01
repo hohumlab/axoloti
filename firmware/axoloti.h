@@ -28,15 +28,19 @@
 #include "limits.h"
 #include "ui.h"
 #include "midi.h"
+
 #include "sdcard.h"
+
 #include "sysmon.h"
+
+#if (USE_EXTERNAL_EEPROM)
+#include "eeprom.h" //seb
+#endif
 
 void axoloti_init(void);
 
-extern void ADAU1961_WriteRegister(uint16_t RegisterAddr,
-                                   uint8_t RegisterValue);
-extern void ADAU1961_I2CStart();
-extern void ADAU1961_I2CStop();
+extern bool_t codec_WM8731_writeReg(uint8_t addr, uint16_t data);
+
 void LogTextMessage(const char* format, ...);
 
 #endif

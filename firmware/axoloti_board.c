@@ -25,15 +25,8 @@
 Mutex Mutex_DMAStream_1_7; // shared: SPI3 (axoloti control) and I2C2 (codec)
 
 void axoloti_board_init(void) {
-
-#ifdef BOARD_AXOLOTI_V05
-  // initialize DMA2D engine
-  RCC->AHB1ENR |= RCC_AHB1ENR_DMA2DEN;
-  RCC->AHB1RSTR |= RCC_AHB1RSTR_DMA2DRST;
-  RCC->AHB1RSTR &= ~RCC_AHB1RSTR_DMA2DRST;
-#endif
-
   chMtxInit(&Mutex_DMAStream_1_7);
+
 }
 
 /* Total number of channels to be sampled by a single ADC operation.*/
@@ -49,37 +42,17 @@ void adc_init(void) {
 }
 
 void adc_configpads(void) {
-#if ((BOARD_AXOLOTI_V03)||(BOARD_AXOLOTI_V05))
   palSetPadMode(GPIOA, 0, PAL_MODE_INPUT_ANALOG);
   palSetPadMode(GPIOA, 1, PAL_MODE_INPUT_ANALOG);
-#ifndef ENABLE_SERIAL_DEBUG
+#ifndef ENABLE_SERIAL_DEBUG //seb: ifdef seemed to be a typo here
   palSetPadMode(GPIOA, 2, PAL_MODE_INPUT_ANALOG);
   palSetPadMode(GPIOA, 3, PAL_MODE_INPUT_ANALOG);
 #endif
+  // don't skip GPIOA4,GPIOA5,GPIOA6,GPIOA7 //seb: seems to be working
   palSetPadMode(GPIOA, 4, PAL_MODE_INPUT_ANALOG);
   palSetPadMode(GPIOA, 5, PAL_MODE_INPUT_ANALOG);
   palSetPadMode(GPIOA, 6, PAL_MODE_INPUT_ANALOG);
   palSetPadMode(GPIOA, 7, PAL_MODE_INPUT_ANALOG);
-
-  palSetPadMode(GPIOB, 0, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOB, 1, PAL_MODE_INPUT_ANALOG);
-
-  palSetPadMode(GPIOC, 0, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOC, 1, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOC, 2, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOC, 3, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOC, 4, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOC, 5, PAL_MODE_INPUT_ANALOG);
-#elif (BOARD_STM32F4DISCOVERY)
-
-  palSetPadMode(GPIOA, 0, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOA, 1, PAL_MODE_INPUT_ANALOG);
-#ifdef ENABLE_SERIAL_DEBUG
-  palSetPadMode(GPIOA, 2, PAL_MODE_INPUT_ANALOG);
-  palSetPadMode(GPIOA, 3, PAL_MODE_INPUT_ANALOG);
-#endif
-  // skip GPIOA4: LRCLK
-  // skip GPIOA5,GPIOA6,GPIOA7: accelerometer
   palSetPadMode(GPIOB, 0, PAL_MODE_INPUT_ANALOG);
   palSetPadMode(GPIOB, 1, PAL_MODE_INPUT_ANALOG);
   //skip GPIOPC0: USB PowerOn
@@ -89,9 +62,6 @@ void adc_configpads(void) {
   palSetPadMode(GPIOC, 4, PAL_MODE_INPUT_ANALOG);
   palSetPadMode(GPIOC, 5, PAL_MODE_INPUT_ANALOG);
   adcStart(&ADCD1, NULL);
-#else
-#error "ADC: No board defined?"
-#endif
 }
 
 /*
@@ -134,4 +104,3 @@ void adc_convert(void) {
   adcStopConversion(&ADCD1);
   adcStartConversion(&ADCD1, &adcgrpcfg1, adcvalues, ADC_GRP1_BUF_DEPTH);
 }
-

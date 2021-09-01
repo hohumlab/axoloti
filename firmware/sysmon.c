@@ -57,14 +57,11 @@ __attribute__((noreturn))
     }
 #endif
     if (isEnabled) {
-#ifdef LED1_PORT
       palWritePad(LED1_PORT, LED1_PIN, (pattern >> pi) & 1);
-#endif
       pi++;
-#ifdef LED2_PORT
       palWritePad(LED2_PORT, LED2_PIN, (pattern >> pi) & 1);
-#endif
       pi++;
+
       if (pi > 31) {
         if (!repeat) {
           pattern = BLINK_OK;
@@ -113,6 +110,12 @@ void sysmon_init(void) {
 #endif
 #ifdef LED2_PORT
   palSetPadMode(LED2_PORT, LED2_PIN, PAL_MODE_OUTPUT_PUSHPULL);
+#endif
+#ifdef LED3_PORT
+  palSetPadMode(LED3_PORT, LED3_PIN, PAL_MODE_OUTPUT_PUSHPULL);
+#endif
+#ifdef LED4_PORT
+  palSetPadMode(LED4_PORT, LED4_PIN, PAL_MODE_OUTPUT_PUSHPULL);
 #endif
 #ifdef SDCSW_PIN
   palSetPadMode(SDCSW_PORT, SDCSW_PIN, PAL_MODE_INPUT_PULLUP);
@@ -172,4 +175,3 @@ uint16_t sysmon_getVoltage50(void){
 uint16_t sysmon_getVoltage10(void){
   return adcvalues[15];
 }
-
